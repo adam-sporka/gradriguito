@@ -13,9 +13,9 @@ public:
 
 	CRules()
 	{
-		m_Boxes['A'] = "________--------";
-		m_Boxes['B'] = "AAA";
-		m_Boxes['C'] = "BB";
+		m_Boxes['A'] = "0123";
+		m_Boxes['B'] = "<AA>";
+		m_Boxes['C'] = "{AA}";
 		m_Boxes['D'] = "";
 		m_Boxes['E'] = "";
 		m_Boxes['F'] = "";
@@ -180,11 +180,10 @@ public:
 
 CRules rules;
 
-int main()
+void debug_traversal(const char *seq)
 {
-	printf("Gradriguito\n");
 	CInstance instance(rules);
-	instance.start("CA__");
+	instance.start(seq);
 
 	bool end_reached;
 	bool output_produced;
@@ -207,7 +206,31 @@ int main()
 		printf("%-16s ", instance.getPosAsString().c_str());
 		printf("\n");
 
-	}	while (!end_reached);
+	} while (!end_reached);
+}
 
+void simple_traversal(const char* seq)
+{
+	CInstance instance(rules);
+	instance.start(seq);
+
+	bool end_reached;
+	bool output_produced;
+	TRuleChar rule_char;
+
+	do
+	{
+		instance.advancePos(end_reached, output_produced, rule_char);
+		if (output_produced)
+		{
+			printf("%c", rule_char);
+		}
+	} while (!end_reached);
+}
+
+int main()
+{
+	printf("Gradriguito\n");
+	debug_traversal("C");
 	return 0;
 }
