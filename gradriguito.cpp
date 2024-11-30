@@ -15,23 +15,18 @@ public:
 
 	CRules()
 	{
-		m_Boxes['A'] = "________________________________________________";
-		m_Boxes['B'] = "________--------________--------________--------";
-		m_Boxes['C'] = "??????------______------______------______------";
-		m_Boxes['D'] = "___---___---___---___---___---___---___---___---";
-		m_Boxes['E'] = "AAAAAAAAAAAAAAAAAAAAAAAA";
-		m_Boxes['F'] = "BBBBBBBBBBBBBBBCBBBBBBBB";
-		m_Boxes['G'] = "CCCCCCCACCCCCCCCCCCCCCCC";
-		m_Boxes['H'] = "DDDDDDDDDDDDEDDDDDDDDDDD";
-		m_Boxes['I'] = "FFFEFFFEFFFEFFEFFEFFEFFE";
-		m_Boxes['J'] = "GGEGGEGGEGGEGEGEGEGEGEGE";
-		m_Boxes['K'] = "HGFEHGFEHGFEHGFEHGFEHGFE";
-		m_Boxes['L'] = "IJKIJKIJKIJK";
-
-		// m_Boxes['A'] = "1234";
-		// m_Boxes['B'] = "[AA]";
-		// m_Boxes['C'] = "(BB)";
-		// m_Boxes['D'] = "{CC}";
+		m_Boxes['A'] = "????????????????????????????????";
+		m_Boxes['B'] = "________________________________";
+		m_Boxes['C'] = "__--__________------------------";
+		m_Boxes['D'] = "______------______------______--";
+		m_Boxes['E'] = "BBBBBBBBBBBBBBBB";
+		m_Boxes['F'] = "CCCCCCCCCCCCCCCC";
+		m_Boxes['G'] = "DDDDDDDDDDDDDDDD";
+		m_Boxes['H'] = "AAFEFEFEEEAAGEGEGEEE";
+		m_Boxes['I'] = "AAFEFEFEGEAAEEFEEEEE";
+		m_Boxes['J'] = "AAEEEEEEEEAAEEEEEEEE";
+		m_Boxes['K'] = "AAEEAAEEAAEEAAEEAAEEAAEEAAEEAAEE";
+		m_Boxes['L'] = "JJJKHIHIHHHIHIHIHHHIJJ";
 	}
 
 	static bool isNonTerminal(TRuleStep x)
@@ -305,6 +300,6 @@ void create_wav_file(const char* seq, const char* filename)
 ////////////////////////////////////////////////////////////////
 int main()
 {
-	create_wav_file("L", "L.wav");
+	create_wav_file("L", "L3.wav");
 	return 0;
 }
