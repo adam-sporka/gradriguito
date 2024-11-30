@@ -4,8 +4,8 @@
 #include <string>
 
 using TRuleStep = char;
-const int MAX_DEPTH = 32;
 
+////////////////////////////////////////////////////////////////
 class CRules
 {
 public:
@@ -44,6 +44,9 @@ public:
 	};
 };
 
+CRules rules;
+
+////////////////////////////////////////////////////////////////
 class CInstance
 {
 public:
@@ -56,12 +59,14 @@ public:
 
 	CInstance(CRules &rules) : m_Rules(rules) {};
 
+	////////////////////////////////
 	void start(const std::string& init_seq)
 	{
 		m_InitSeq = init_seq;
 		m_PosVec = { BEGIN };
 	}
 
+	////////////////////////////////
 	std::string getPosAsString()
 	{
 		std::string out = "";
@@ -81,6 +86,7 @@ public:
 		return out;
 	}
 
+	////////////////////////////////
 	bool endReached()
 	{
 		if (m_PosVec.size() == 1)
@@ -93,6 +99,7 @@ public:
 		return false;
 	}
 
+	////////////////////////////////
 	void getLeastSignificantSequence(std::string** seq)
 	{
 		for (auto p = m_PosVec.begin(); p != m_PosVec.end() && (p + 1) != m_PosVec.end(); p++)
@@ -101,12 +108,14 @@ public:
 		}
 	}
 
+	////////////////////////////////
 	void setLeastSignificantIndex(int index)
 	{
 		m_PosVec.pop_back();
 		m_PosVec.push_back(index);
 	}
 
+	////////////////////////////////
 	bool handleNonTerminalSymbol(TRuleStep& chr)
 	{
 		if (CRules::isNonTerminal(chr))
@@ -117,6 +126,7 @@ public:
 		return false;
 	}
 
+	////////////////////////////////
 	void advancePos(bool &output_produced, TRuleStep &out_rule_char)
 	{
 		std::string* seq = &m_InitSeq;
@@ -185,8 +195,7 @@ public:
 	}
 };
 
-CRules rules;
-
+////////////////////////////////////////////////////////////////
 void debug_traversal(const char *seq)
 {
 	CInstance instance(rules);
@@ -213,6 +222,7 @@ void debug_traversal(const char *seq)
 	} while (!instance.endReached());
 }
 
+////////////////////////////////////////////////////////////////
 void simple_traversal(const char* seq)
 {
 	CInstance instance(rules);
@@ -231,6 +241,7 @@ void simple_traversal(const char* seq)
 	} while (!instance.endReached());
 }
 
+////////////////////////////////////////////////////////////////
 int main()
 {
 	debug_traversal("D");
