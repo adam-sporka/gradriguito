@@ -13,18 +13,18 @@ public:
 
 	CRules()
 	{
-		m_Boxes['A'] = "0123";
-		m_Boxes['B'] = "<AA>";
-		m_Boxes['C'] = "{AA}";
-		m_Boxes['D'] = "";
-		m_Boxes['E'] = "";
-		m_Boxes['F'] = "";
-		m_Boxes['G'] = "";
-		m_Boxes['H'] = "";
-		m_Boxes['I'] = "";
-		m_Boxes['J'] = "";
-		m_Boxes['K'] = "";
-		m_Boxes['L'] = "";
+		m_Boxes['A'] = "________________________________________________";
+		m_Boxes['B'] = "________--------________--------________--------";
+		m_Boxes['C'] = "______------______------______------______------";
+		m_Boxes['D'] = "___---___---___---___---___---___---___---___---";
+		m_Boxes['E'] = "AAAAAAAAAAAAAAAAAAAAAAAA";
+		m_Boxes['F'] = "BBBBBBBBBBBBBBBCBBBBBBBB";
+		m_Boxes['G'] = "CCCCCCCACCCCCCCCCCCCCCCC";
+		m_Boxes['H'] = "DDDDDDDDDDDDEDDDDDDDDDDD";
+		m_Boxes['I'] = "FFFEFFFEFFFEFFEFFEFFEFFE";
+		m_Boxes['J'] = "GGEGGEGGEGGEGEGEGEGEGEGE";
+		m_Boxes['K'] = "HGFEHGFEHGFEHGFEHGFEHGFE";
+		m_Boxes['L'] = "IJKIJKIJKIJK";
 	}
 
 	static bool isNonTerminal(TRuleChar x)
@@ -57,7 +57,6 @@ public:
 		m_PosVec = { BEGIN };
 	}
 
-#ifdef _DEBUG
 	std::string getPosAsString()
 	{
 		std::string out = "";
@@ -76,13 +75,23 @@ public:
 		}
 		return out;
 	}
-#endif
 
-	void advancePos(bool &out_end_reached, bool &output_produced, TRuleChar &out_rule_char)
+	bool endReached()
+	{
+		if (m_PosVec.size() == 1)
+		{
+			if (m_PosVec.back() == END)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void advancePos(bool &output_produced, TRuleChar &out_rule_char)
 	{
 		std::string seq = m_InitSeq;
 
-		out_end_reached = false;
 		output_produced = false;
 		out_rule_char = '.';
 
@@ -117,7 +126,6 @@ public:
 		{
 			if (m_PosVec.size() == 1)
 			{
-				out_end_reached = true;
 				return;
 			}
 			else
@@ -162,9 +170,6 @@ public:
 		int index = m_PosVec.back();
 		if (CRules::isNonTerminal(seq[index]))
 		{
-			m_PosVec.pop_back();
-			index++;
-			m_PosVec.push_back(index);
 			m_PosVec.push_back(BEGIN);
 		}
 		else
@@ -185,28 +190,25 @@ void debug_traversal(const char *seq)
 	CInstance instance(rules);
 	instance.start(seq);
 
-	bool end_reached;
 	bool output_produced;
 	TRuleChar rule_char;
 
 	do
 	{
 		printf("%-16s", instance.getPosAsString().c_str());
-
-		instance.advancePos(end_reached, output_produced, rule_char);
+		instance.advancePos(output_produced, rule_char);
 		if (!output_produced)
 		{
-			printf("again          ");
+			printf("               ");
 		}
 		else
 		{
 			printf("%c              ", rule_char);
 		}
-
 		printf("%-16s ", instance.getPosAsString().c_str());
 		printf("\n");
 
-	} while (!end_reached);
+	} while (!instance.endReached());
 }
 
 void simple_traversal(const char* seq)
@@ -214,23 +216,21 @@ void simple_traversal(const char* seq)
 	CInstance instance(rules);
 	instance.start(seq);
 
-	bool end_reached;
 	bool output_produced;
 	TRuleChar rule_char;
 
 	do
 	{
-		instance.advancePos(end_reached, output_produced, rule_char);
+		instance.advancePos(output_produced, rule_char);
 		if (output_produced)
 		{
 			printf("%c", rule_char);
 		}
-	} while (!end_reached);
+	} while (!instance.endReached());
 }
 
 int main()
 {
-	printf("Gradriguito\n");
-	debug_traversal("C");
+	simple_traversal("L");
 	return 0;
 }
