@@ -1,3 +1,5 @@
+#include "3rd-party/AudioFile.h"
+
 #include <stdlib.h>
 #include <vector>
 #include <map>
@@ -13,23 +15,23 @@ public:
 
 	CRules()
 	{
-		// m_Boxes['A'] = "________________________________________________";
-		// m_Boxes['B'] = "________--------________--------________--------";
-		// m_Boxes['C'] = "______------______------______------______------";
-		// m_Boxes['D'] = "___---___---___---___---___---___---___---___---";
-		// m_Boxes['E'] = "AAAAAAAAAAAAAAAAAAAAAAAA";
-		// m_Boxes['F'] = "BBBBBBBBBBBBBBBCBBBBBBBB";
-		// m_Boxes['G'] = "CCCCCCCACCCCCCCCCCCCCCCC";
-		// m_Boxes['H'] = "DDDDDDDDDDDDEDDDDDDDDDDD";
-		// m_Boxes['I'] = "FFFEFFFEFFFEFFEFFEFFEFFE";
-		// m_Boxes['J'] = "GGEGGEGGEGGEGEGEGEGEGEGE";
-		// m_Boxes['K'] = "HGFEHGFEHGFEHGFEHGFEHGFE";
-		// m_Boxes['L'] = "IJKIJKIJKIJK";
+		m_Boxes['A'] = "________________________________________________";
+		m_Boxes['B'] = "________--------________--------________--------";
+		m_Boxes['C'] = "??????------______------______------______------";
+		m_Boxes['D'] = "___---___---___---___---___---___---___---___---";
+		m_Boxes['E'] = "AAAAAAAAAAAAAAAAAAAAAAAA";
+		m_Boxes['F'] = "BBBBBBBBBBBBBBBCBBBBBBBB";
+		m_Boxes['G'] = "CCCCCCCACCCCCCCCCCCCCCCC";
+		m_Boxes['H'] = "DDDDDDDDDDDDEDDDDDDDDDDD";
+		m_Boxes['I'] = "FFFEFFFEFFFEFFEFFEFFEFFE";
+		m_Boxes['J'] = "GGEGGEGGEGGEGEGEGEGEGEGE";
+		m_Boxes['K'] = "HGFEHGFEHGFEHGFEHGFEHGFE";
+		m_Boxes['L'] = "IJKIJKIJKIJK";
 
-		m_Boxes['A'] = "1234";
-		m_Boxes['B'] = "[AA]";
-		m_Boxes['C'] = "(BB)";
-		m_Boxes['D'] = "{CC}";
+		// m_Boxes['A'] = "1234";
+		// m_Boxes['B'] = "[AA]";
+		// m_Boxes['C'] = "(BB)";
+		// m_Boxes['D'] = "{CC}";
 	}
 
 	static bool isNonTerminal(TRuleStep x)
@@ -242,8 +244,67 @@ void simple_traversal(const char* seq)
 }
 
 ////////////////////////////////////////////////////////////////
+int get_count_samples(const char* seq)
+{
+	CInstance instance(rules);
+	instance.start(seq);
+
+	int o = 0;
+	bool output_produced;
+	TRuleStep rule_char;
+
+	do
+	{
+		instance.advancePos(output_produced, rule_char);
+		if (output_produced)
+		{
+			o++;
+		}
+	} while (!instance.endReached());
+
+	return o;
+}
+
+////////////////////////////////////////////////////////////////
+void create_wav_file(const char* seq, const char* filename)
+{
+	int length = get_count_samples(seq);
+
+	AudioFile<char> a;
+	a.setNumChannels(1);
+	a.setSampleRate(8000);
+	a.setBitDepth(8);
+	a.setNumSamplesPerChannel(length);
+
+	CInstance instance(rules);
+	instance.start(seq);
+
+	int pos = 0;
+	bool output_produced;
+	TRuleStep rule_char;
+
+	do
+	{
+		instance.advancePos(output_produced, rule_char);
+		if (output_produced)
+		{
+			switch (rule_char)
+			{
+				case '_': a.samples[0][pos] = -16; break;
+				case '-': a.samples[0][pos] = 16; break;
+				case '?': a.samples[0][pos] = rand() % 33 - 16; break;
+				default: a.samples[0][pos] = 0;
+			}
+			pos++;
+		}
+	} while (!instance.endReached());
+
+	a.save(filename);
+}
+
+////////////////////////////////////////////////////////////////
 int main()
 {
-	debug_traversal("D");
+	create_wav_file("L", "L.wav");
 	return 0;
 }

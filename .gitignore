@@ -349,3 +349,6 @@ healthchecksdb
 MigrationBackup/
 
 out.raw
+
+*.wav
+!examples/*.wav
