@@ -1,0 +1,1 @@
+Open beat.gto in Notepad for instructions.
