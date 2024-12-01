@@ -1,0 +1,40 @@
+# GRADRIGUITO DEMO RULE FILE
+# Use terminal symbols ?_- to produce audio samples. Use non-terminal symbols
+# to define sequences of terminal symbols and non-terminal symbols. Hash
+# character means a comment.
+#
+# HOW TO RUN
+# Use the command prompt to generate wav files
+# gradriguito.exe rulefile.gto outputfile.wav "L"
+#    will read the rulefile.gto, will output to outputfile.wav, and will start
+#    with the rule "L".
+#
+# REWRITE RULES
+#  * The format is <non-terminal>: <sequence>
+#    i.e., a non-terminal is expanded into a sequence of non-terminal and
+#    terminal symbols.
+#  * Terminal symbols output the individual samples of a .wav file
+#  * Non-terminal symbols rewrite as sequences of terminal and non-terminal
+#    symbols. Avoid cycles! (E.g. A: __B, B: AA)
+*  * All other symbols are ignored (tip: Spaces make the rules more legible)
+#
+# TERMINAL SYMBOLS
+# ? ... output a random sample between -16 and 16
+# _ ... output -16
+# - ... output 16
+#
+# NON-TERMINAL SYMBOLS
+# Letters A through L
+
+A: ????????????????????????????????
+B: ________________________________
+C: __--__________------------------
+D: ______------______------______--
+E: BBBBBBBBBBBBBBBB
+F: CCCCCCCCCCCCCCCC
+G: DDDDDDDDDDDDDDDD
+H: AAFEFEFEEEAAGEGEGEEE
+I: AAFEFEFEGEAAEEFEEEEE
+J: AAEEEEEEEEAAEEEEEEEE
+K: AAEEAAEEAAEEAAEEAAEEAAEEAAEEAAEE
+L: JJJKHIHIHHHIHIHIHHHIJJ

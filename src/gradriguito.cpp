@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <fstream>
 
 using TRuleStep = char;
 
@@ -13,6 +14,7 @@ class CRules
 public:
 	std::map<TRuleStep, std::string> m_Boxes;
 
+	////////////////////////////////
 	CRules()
 	{
 		m_Boxes['A'] = "????????????????????????????????";
@@ -29,19 +31,55 @@ public:
 		m_Boxes['L'] = "JJJKHIHIHHHIHIHIHHHIJJ";
 	}
 
+	////////////////////////////////
+	bool parseFile(const char* path)
+	{
+		try
+		{
+			m_Boxes.clear();
+
+			std::ifstream file(path);
+			std::string str;
+			while (std::getline(file, str))
+			{
+				if (str[0] == '#') continue;
+				char first_char = '\0';
+				for (auto c : str) {
+					if (first_char == '\0') {
+						if (isNonTerminal(c)) {
+							first_char = c;
+						}
+					}
+					else {
+						if (isNonTerminal(c) || isTerminal(c))
+						{
+							m_Boxes[first_char].push_back(c);
+						}
+					}
+				}
+			}
+		}
+		catch (...)
+		{
+			printf("Exception while reading %s\n", path);
+			return false;
+		}
+	}
+
+	////////////////////////////////
 	static bool isNonTerminal(TRuleStep x)
 	{
-		if (x >= 'A' && x <= 'L') return true;
+		if (x >= 'A' && x <= 'Z') return true;
 		return false;
 	}
 
+	////////////////////////////////
 	static bool isTerminal(TRuleStep x)
 	{
-		return !isNonTerminal(x); 
+		if (x == '_' || x == '-' || x == '?') return true;
+		return false;
 	};
 };
-
-CRules rules;
 
 ////////////////////////////////////////////////////////////////
 class CInstance
@@ -193,7 +231,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////
-void debug_traversal(const char *seq)
+void debug_traversal(CRules rules, const char *seq)
 {
 	CInstance instance(rules);
 	instance.start(seq);
@@ -220,26 +258,7 @@ void debug_traversal(const char *seq)
 }
 
 ////////////////////////////////////////////////////////////////
-void simple_traversal(const char* seq)
-{
-	CInstance instance(rules);
-	instance.start(seq);
-
-	bool output_produced;
-	TRuleStep rule_char;
-
-	do
-	{
-		instance.advancePos(output_produced, rule_char);
-		if (output_produced)
-		{
-			printf("%c", rule_char);
-		}
-	} while (!instance.endReached());
-}
-
-////////////////////////////////////////////////////////////////
-int get_count_samples(const char* seq)
+int get_count_samples(CRules rules, const char* seq)
 {
 	CInstance instance(rules);
 	instance.start(seq);
@@ -261,9 +280,9 @@ int get_count_samples(const char* seq)
 }
 
 ////////////////////////////////////////////////////////////////
-void create_wav_file(const char* seq, const char* filename)
+void create_wav_file(CRules &rules, const char* filename, const char* seq)
 {
-	int length = get_count_samples(seq);
+	int length = get_count_samples(rules, seq);
 
 	AudioFile<char> a;
 	a.setNumChannels(1);
@@ -298,8 +317,27 @@ void create_wav_file(const char* seq, const char* filename)
 }
 
 ////////////////////////////////////////////////////////////////
-int main()
+int main(int argc, char** argv)
 {
-	create_wav_file("L", "L3.wav");
+	if (argc < 4)
+	{
+		printf("Usage:\n");
+		printf("gradriguito <rule_file> <output.wav> <start_rule>\n");
+		printf("e.g.: gradriguito beat.gto beat.wav L\n");
+		return 0;
+	}
+
+	std::string rule_file = argv[1];
+	std::string output_file = argv[2];
+	std::string start_seq = argv[3];
+
+	CRules rules;
+	if (!rules.parseFile(rule_file.c_str()))
+	{
+		printf("Error parsing %s\n", rule_file.c_str());
+		return 1;
+	}
+
+	create_wav_file(rules, output_file.c_str(), start_seq.c_str());
 	return 0;
 }
