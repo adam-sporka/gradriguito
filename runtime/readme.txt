@@ -1,1 +1,2 @@
-Open beat.gto in Notepad for instructions.
+Open tutorial.gto in Notepad for instructions.
+Then try building before-basics.gto

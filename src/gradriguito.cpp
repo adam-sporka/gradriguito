@@ -76,7 +76,7 @@ public:
 	////////////////////////////////
 	static bool isTerminal(TRuleStep x)
 	{
-		if (x == '_' || x == '-' || x == '?') return true;
+		if (x == '_' || x == '-' || x == '0' || x == '?') return true;
 		return false;
 	};
 };
@@ -306,6 +306,7 @@ void create_wav_file(CRules &rules, const char* filename, const char* seq)
 			{
 				case '_': a.samples[0][pos] = -16; break;
 				case '-': a.samples[0][pos] = 16; break;
+				case '0': a.samples[0][pos] = 0; break;
 				case '?': a.samples[0][pos] = rand() % 33 - 16; break;
 				default: a.samples[0][pos] = 0;
 			}
