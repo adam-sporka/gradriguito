@@ -15,7 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gradriguito.cpp">
+    <ClInclude Include="..\..\src\3rd-party\AudioFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\gradriguito.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
