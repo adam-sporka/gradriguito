@@ -6,3 +6,7 @@ Check runtime/tutorial.gto how to use it.
 
 Gradriguito is the little brother of Gradrigo:
 https://adam.sporka.eu/gradrigo.html
+
+# Disclaimer
+
+USE AT YOUR OWN RISK!
