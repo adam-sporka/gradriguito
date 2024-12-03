@@ -282,13 +282,13 @@ int get_count_samples(CRules rules, const char* seq)
 ////////////////////////////////////////////////////////////////
 void create_wav_file(CRules &rules, const char* filename, const char* seq)
 {
-	int length = get_count_samples(rules, seq);
+	int allocated_length = 32000;
 
 	AudioFile<char> a;
 	a.setNumChannels(1);
 	a.setSampleRate(8000);
 	a.setBitDepth(8);
-	a.setNumSamplesPerChannel(length);
+	a.setNumSamplesPerChannel(allocated_length);
 
 	CInstance instance(rules);
 	instance.start(seq);
@@ -311,9 +311,16 @@ void create_wav_file(CRules &rules, const char* filename, const char* seq)
 				default: a.samples[0][pos] = 0;
 			}
 			pos++;
+
+			if (pos >= allocated_length)
+			{
+				allocated_length += 32000;
+				a.setNumSamplesPerChannel(allocated_length);
+			}
 		}
 	} while (!instance.endReached());
 
+	a.setNumSamplesPerChannel(pos);
 	a.save(filename);
 }
 
