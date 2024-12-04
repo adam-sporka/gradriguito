@@ -15,23 +15,6 @@ public:
 	std::map<TRuleStep, std::string> m_Boxes;
 
 	////////////////////////////////
-	CRules()
-	{
-		m_Boxes['A'] = "????????????????????????????????";
-		m_Boxes['B'] = "________________________________";
-		m_Boxes['C'] = "__--__________------------------";
-		m_Boxes['D'] = "______------______------______--";
-		m_Boxes['E'] = "BBBBBBBBBBBBBBBB";
-		m_Boxes['F'] = "CCCCCCCCCCCCCCCC";
-		m_Boxes['G'] = "DDDDDDDDDDDDDDDD";
-		m_Boxes['H'] = "AAFEFEFEEEAAGEGEGEEE";
-		m_Boxes['I'] = "AAFEFEFEGEAAEEFEEEEE";
-		m_Boxes['J'] = "AAEEEEEEEEAAEEEEEEEE";
-		m_Boxes['K'] = "AAEEAAEEAAEEAAEEAAEEAAEEAAEEAAEE";
-		m_Boxes['L'] = "JJJKHIHIHHHIHIHIHHHIJJ";
-	}
-
-	////////////////////////////////
 	bool parseFile(const char* path)
 	{
 		try
@@ -70,6 +53,7 @@ public:
 	static bool isNonTerminal(TRuleStep x)
 	{
 		if (x >= 'A' && x <= 'Z') return true;
+		if (x >= 'a' && x <= 'z') return true;
 		return false;
 	}
 
